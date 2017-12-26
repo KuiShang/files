@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>登录</title>
+<link type="text/css" rel="stylesheet" href="../css/public/public.css">
+<link type="text/css" rel="stylesheet" href="../css/module/login.css">
+
+<script src="../js/compatible.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/qwebchannel.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/login.js"></script>
+	<style>
+		html{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+</head>
+<!-- oncontextmenu="return false" -->
+<body id="win_box" class="opg" oncontextmenu="return false" style="-webkit-user-select: none;">
+	<div class="wrap-login">
+		<div class="login-close">
+			<a id="winMin" href="javascript:;" class="iconn-3"></a><a
+				id="winClose" href="javascript:;" class="iconn-11"></a>
+		</div>
+		<div id="login-name" class="login-name login-images"></div>
+		<div id="login-form" class="login-form">
+			<div class="form-box">
+				<em class="iconn-41 icon"></em> 
+				<input id="username" class="username" type="text" placeholder="输入手机号" maxlength="11">
+				<!-- .active为显示关闭按钮-->
+				<em id="clearUsername" class="icon11"></em>
+			</div>
+			<div class="form-box">
+				<em class="iconn-12 icon"></em> 
+				<input id="password" class="password" type="password" placeholder="输入密码" maxlength="20">
+				<!-- .active为变色-->
+				<em id="loginBtn" class="icon7"></em>
+			</div>
+		</div>
+		<div class="login-link clearfix">
+			<div id="fl" class="fl">
+				<label id="rememberPwd_"> <!-- .iconn-10为选中效果-->
+					<em id="rememberPwd" class="icon9"></em>记住密码
+				</label> 
+				<label id="autoLogin_">
+					<em id="autoLogin" class="icon9"></em>自动登录
+				</label>
+			</div>
+			<div id="fr" class="fr">
+				<!-- <p>
+					<a id="activateAccount" href="#">激活账号</a>
+				</p> -->
+				<p>
+					<a id="retrievePassword" href="#">忘记密码</a>
+				</p>
+				<p>
+					<a id="registeredEnterprise" href="#">注册企业</a>
+				</p>
+			</div>
+		</div>
+		<div id="login-loading" class="login-loading" style="display: none;">
+			<img src="../images/public/登录加载@2x.gif">
+			<p>登录中</p>
+		</div>
+		<div id="pop-warning" class="pop-warning" style="display: none;"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>主窗口</title>
+<link type="text/css" rel="stylesheet" href="../css/public/public.css">
+<link type="text/css" rel="stylesheet" href="../css/module/im.css">
+<link type="text/css" rel="stylesheet" href="../css/module/group.css">
+<link type="text/css" rel="stylesheet" href="../css/module/filetransfer.css">
+<link type="text/css" rel="stylesheet" href="../css/module/aitemsg.css">
+<link type="text/css" rel="stylesheet" href="../css/module/acknowledmsg.css">
+	<link type="text/css" rel="stylesheet" href="../css/module/smartMenu.css">
+<link rel="stylesheet" href="../dist/static/css/app.css">
+<script src="../js/compatible.js"></script>
+<script src="../js/jquery.min.js"></script>
+	<script src="../js/jquery-smartMenu.js"></script>
+<script src="../js/qwebchannel.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/polyfill.js"></script>
+<script src="../js/uuid-Util.js"></script>
+<script src="../js/tree.js"></script>
+<script src="../js/mouseWheel.js"></script>
+<script src="../js/main-common.js"></script>
+<script src="../js/main-chat.js"></script>
+<script src="../js/main-contacts.js"></script>
+<script src="../js/main-objects.js"></script>
+<script src="../js/RevokeMsgUtil.js"></script>
+<script src="../js/main-chat-aite.js"></script>
+<script src="../js/acknowledgeMsgCtr.js"></script>
+<script src="../js/main-chat-message.js"></script>
+
+
+<script src="../js/klogger.js"></script>
+</head>
+<!-- oncontextmenu="return false" -->
+<body class="opg" oncontextmenu="return false">
+
+	<!-- 这个div用来反转义字符串 -->
+	<div id="decode" class="hideList"></div>
+
+	<div id="app" class="wrap-im">
+        <GuidePage></GuidePage>
+        <MoreMenu :showmenu="showMenu" @change-show="changeShow" ></MoreMenu>
+		<div id="im-left" class="im-left">
+			<div id="myInfo" class="im-name" onclick="showMyInfo()"></div>
+			<!--.active为选中效果-->
+            <a id="im-channel" class="im-channel active" @click="$store.dispatch('setGlobalStatus', 'channel')">
+                <em class="iconn-channel"></em> <span class="num" style="display: none;" v-show="unreadChannelMsgNum !== 0" v-text="unreadChannelMsgNum"></span>
+                <span class="num-sm" style="display: none;" v-show="unreadChannelMsgNum === 0 && unreadChannelCommonMsgNum !== 0"></span>
+                <!--<strong class="im-the-font font-active">频道</strong>-->
+            </a> <a id="im-chat" class="im-chat" number="0" @click="$store.dispatch('setGlobalStatus', 'chat')">
+				<em class="iconn-chat"></em> <span class="num hideList">0</span>
+				<!--<strong class="im-the-font">消息</strong>-->
+			</a> <a id="im-contact" class="im-contact" @click="$store.dispatch('setGlobalStatus', 'contact')"> <em
+				class="iconn-contact"></em>
+				<!--<strong class="im-detail-font">通讯录</strong>-->
+			</a> <a class="im-application" @click="$store.dispatch('setGlobalStatus', 'application')">
+                <em class="iconn-application"></em><span class="num" style="display: none" v-show="totalAppUnReadNum > 0" v-text="totalAppUnReadNumStr"></span>
+            </a> <a id="im-more" class="im-set" @click.stop="isShowMenu()" > <em
+				class="iconn-more"></em><span class="num-xs" v-if="updateStatus"></span>
+			</a>
+			<!-- <div class="im-more-list">
+				<a href="javascript:;">官网</a>
+				<a href="javascript:;">下载手机版</a>
+				<a id="im-config" href="javascript:;">设置</a>
+			</div> -->
+		</div>
+		<div class="im-right">
+			<div id="right-top" class="right-top">
+				<div class="fl">
+					<div id="search" class="search-val">
+						<em class="iconn-21"></em>
+                        <input type="text" class="search-input"
+                             style="color: #B5B5B5;font-size: 12px; padding: 6px 0 6px 30px;" value="联系人、频道、群聊">
+						<em id="deleteIcon" class="iconn-11 active hideList"></em>
+					</div>
+					<a class="search-btn iconn-39 "></a>
+				</div>
+                <!--<div class="fr">-->
+                    <!--<a id="winMin" herf="javascript:;" class="iconn-3"></a><a-->
+                    <!--id="winMax" herf="javascript:;" class="iconn-45 iconn-38"></a><a-->
+                    <!--id="winClose" herf="javascript:;" class="iconn-11"></a>-->
+                <!--</div>-->
+			</div>
+            <!--<div class="global-win-control">-->
+                <!--<a id="winMin" herf="javascript:;" class="iconn-3"></a><a-->
+                <!--id="winMax" herf="javascript:;" class="iconn-45 iconn-38"></a><a-->
+                <!--id="winClose" herf="javascript:;" class="iconn-11"></a>-->
+            <!--</div>-->
+            <ChannelContent v-show="globalStatus === 'channel'"></ChannelContent>
+            <ApplicationContent v-show="globalStatus === 'application'"></ApplicationContent>
+			<div id="chat-content" v-show="globalStatus === 'chat'">
+				<!-- <div class="right-list"
+					style="overflow-y: hidden; overflow-x: hidden;"> -->
+				<div id="no-wifi" class="no-wifi hideList">
+						<em class="iconn-28"></em><span></span>
+				</div>
+				<div class="right-list">
+					<div id="session-no-record" class="no-record hideList">
+						<img src="../images/public/no-record.jpg" width="132" height="132">
+						<p>没有会话记录</p>
+						<span>快联系你的小伙伴吧</span>
+					</div>
+					<ul id="session" class="clearfix name-list name-show">
+
+					</ul>
+					<div class="session-loading chat-session-loading">
+			            <img src="../images/public/loading-ms.gif">
+			        </div>
+				</div>
+				<!-- </div> -->
+				<div class="right-con">
+                    <div class="con-title for-drag"></div>
+					<div id="newMsgTip" class="list-new hideList"
+						onclick="topFirstNew()"></div>
+					<div id="currentMsgTip" class="list-new list-new-current hideList"
+						 onclick="goToMsgAreaBottom()"></div>
+					<div id="msg-no-record" class="no-record">
+						<img src="../images/public/no-record.jpg" width="132" height="132">
+					</div>
+					<div id="chatArea" class="hideList">
+						<div class="con-title">
+							<span id="chat-title" style="cursor: pointer;"></span>
+							<span id="chat-deptAndDuty" class="hideList">(<span class="deptAndDutyContent"></span>)</span>
+						</div>
+                        <div class="file-btn-container">
+
+                            <div class="chat-menu-item active">会话</div>
+
+                            <div class="file-btn-box" id="file-btn">
+                                <div class="btn-wrapper" id="btn-wrapper">
+                                    <div class="file-btn iconn-icon-list" id="iconn-icon-list"></div>
+                                    <div class="file-btn iconn-icon-close"></div>
+                                </div>
+                            </div>
+                        </div>
+						<!-- 消息区域 -->
+						<div id="msgArea"></div>
+						<!-- 输入区域 -->
+						<div class="con-val hideList">
+							<div class="val-title">
+								<em id="selectFace" class="iconn-1"></em>
+								<em id="printScreen" class="iconn-icon-printscreen" style="">
+									<img src="../images/im/裁剪 copy@2x (2).png" alt="" class="un-active">
+									<img src="../images/im/裁剪 copy@2x.png" alt="" class="active">
+								</em>
+								<em id="selectPic" class="iconn-22"></em>
+								<em id="selectFile" class="iconn-icon-file"></em>
+								<!--回执消息-->
+								<em id="sendAcknowledgementMsg" class="iconn-icon-acknow" style="">
+									<img src="../images/im/回执消息@2x.png" alt="" class="un-active">
+									<img src="../images/im/回执消息－hover@2x.png" alt="" class="active">
+								</em>
+
+
+								<div id="emoji" class="emoji hideList">
+									<div class="emoji-list">
+										<ul id="faces" class="clearfix">
+										</ul>
+									</div>
+									<div class="emoji-tab">
+										<div class="tab-default">
+											<em class="iconn-1"></em>
+										</div>
+									</div>
+								</div>
+							</div>
+							<pre id="input-content" contenteditable="plaintext-only"
+								class="edit-box"></pre>
+							<div class="btn-box">
+								<button id="sendBtn" class="btn-send-msg">发送</button>
+								<div id="too-much-pic" class="prompt-num hideList">最多支持10张图片一起发送
+        							<div class="triangle"><i>■</i><i>■</i></div>
+    							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="contacts-content" class="hideList" v-show="globalStatus === 'contact'">
+				<div class="right-list">
+					<ul class="clearfix group-list group-show">
+						<div class="freshIng hideList"><img src="../images/public/登录加载@2x.gif" ></div>
+						<div class="freshSuccess hideList">刷新成功</div>
+						<div class="freshError hideList">刷新失败，请<span class="refreshAgain">重试</span><span class="freshErrorClosed"></span></div>
+						<li>
+							<a id="myChannel">
+								<em class="iconn-24"></em>
+								<p>我的频道</p>
+								<span class="num"></span>
+							</a>
+							<ul id="myChannel-content" class="group-my hideList">
+
+							</ul>
+						</li>
+						<li><a id="myGroup"><em
+								class="iconn-24"></em>
+								<p>我的群组</p> <span class="num"></span></a>
+							<ul id="myGroup-content" class="group-my hideList">
+								<!--active为选中样式，-->
+							</ul></li>
+						<li><a id="myContacts"><em
+								class="iconn-24"></em>
+								<p>星标联系人</p> <span class="num"></span></a>
+							<ul id="myContacts-content" class="group-my hideList">
+							</ul></li>
+						<!-- 部门树 -->
+						<div id="deptTree"></div>
+					</ul>
+				</div>
+				<div class="right-con">
+                    <span class="contacts-title"></span>
+					<div id="members-no-record" class="no-record">
+						<img src="../images/public/no-record.jpg" width="132" height="132">
+						<p class="hideList">暂无直属人员</p>
+					</div>
+					<!-- 员工列表 -->
+					<div id="members-list" class="group-detail hideList">
+						<div id="members-list-title" class="detail-title"><span class="channel-detail-title"></span><span class="channel-detail-num"></span></div>
+						<div class="detail-table clearfix">
+							<div class="table-head">姓名</div>
+							<div class="table-head">职务</div>
+							<div class="table-head">邮箱</div>
+						</div>
+						<div id="members-scroll" class="detail-scroll">
+							<table class="detail-table">
+								<tbody id="members-content">
+								</tbody>
+							</table>
+						</div>
+						<a id="loadMoreMembers" class="more hideList">加载更多</a>
+						<!-- <a href="javascript:;" class="more"><img src="../images/public/loading.gif"></a> -->
+					</div>
+
+					<!-- 群详情 -->
+					<div id="group-detail" class="my-detal hideList">
+						<div id="group-detail-title" class="detail-title">
+							<div class="im-name">
+								<em class="iconn-46"></em>
+							</div>
+							<p>周昊，王伟伟，张鑫，孟非（8人）</p>
+						</div>
+						<div class="detail-tab">
+							<div class="fl">
+								<a id="group-detail-info-btn" class="active">资料</a>
+							</div>
+							<div class="fr">
+								<a id="group-detail-members-btn">成员</a>
+							</div>
+						</div>
+						<div id="group-detail-info" class="detail-name group-info-scroll">
+							<div class="gray">群名称</div>
+							<p id="group-name">周昊,王伟伟,张鑫,孟非,董丽,王娜娜</p>
+							<input class="group-name-input hide" maxlength="20">
+							<span class="edit hide"><img src="../images/public/编辑@2x.png"></span>
+							<div class="gray">群公告</div>
+							<p id="group-bulletin"></p>
+							<div class="gray hideList">群主</div>
+							<p class="hideList">
+								<em class="iconn-44"></em><a href="javascript:;">转让群主</a>
+							</p>
+						</div>
+						<div id="group-detail-members"
+							class="detail-members detail-membersList group-members-scroll hideList">
+							<ul class="clearfix">
+
+							</ul>
+						</div>
+						<!--.disabled为禁用样式-->
+						<a href="javascript:;" class="btn-send" ondragstart="return false"
+							onclick="groupNewConversation()">发起会话</a>
+					</div>
+
+					<!-- 频道详情 -->
+					<div id="channel-detail" class="my-detal hideList">
+						<div id="channel-detail-title" class="detail-title">
+							<div class="im-name">
+								<img class="channelDetail-icon" src="../images/icon/Group 4 Copy 7@2x.png">
+							</div>
+							<p>周昊，王伟伟，张鑫，孟非（8人）</p>
+						</div>
+						<div class="detail-tab">
+							<div class="fl">
+								<a id="channel-detail-info-btn" class="active">资料</a>
+							</div>
+							<div class="fr">
+								<a id="channel-detail-members-btn">成员</a>
+							</div>
+						</div>
+						<div id="channel-detail-info" class="detail-name group-info-scroll">
+							<div class="gray">频道说明</div>
+							<p id="channel-name">周昊,王伟伟,张鑫,孟非,董丽,王娜娜</p>
+							<div class="gray">频道公告</div>
+							<p id="channel-bulletin"></p>
+							<div class="gray hideList">群主</div>
+							<p class="hideList">
+								<em class="iconn-44"></em><a href="javascript:;">转让群主</a>
+							</p>
+						</div>
+						<div id="channel-detail-members"
+							 class="detail-membersList group-members-scroll2 hideList">
+							<ul class="clearfix">
+
+							</ul>
+						</div>
+						<!--.disabled为禁用样式-->
+						<a href="javascript:;" class="btn-send new-channel-conversation" ondragstart="return false"
+						   onclick="channelNewConversation()">进入频道</a>
+					</div>
+
+					<!-- 常用联系人详情 -->
+					<div id="contacts-detail" class="my-detal hideList">
+						<div class="detail-title">
+							<div class="im-name"></div>
+							<p id="contacts-detail-name"></p>
+							<span id="contacts-detail-status" class="un-active hideList">未激活</span>
+						</div>
+						<div class="detail-tab" style="height: 20px;"></div>
+						<!--个人信息-->
+						<div id="contacts-detail-infos" class="detail-message"
+							style="height: 298px; overflow-y: auto;">
+							<div class="gray">个人信息</div>
+							<p id="contacts-detail-phone">
+								<em class="iconn-20"></em>
+							</p>
+							<p id="contacts-detail-mail">
+								<em class="iconn-42"></em>wanghui@gomeplus.com
+							</p>
+							<p id="contacts-detail-dept">
+								<em class="iconn-4"></em>技术中心-无线研发部-企业办公客户端-全国销售及市场部-华北大区-大客户销售1部-销售3组-高级销售经理
+							</p>
+							<p id="contacts-detail-duty">
+								<em class="iconn-43"></em>开发工程师
+							</p>
+							<div id="partTime" class="hideList">
+								<div class="gray">兼任信息</div>
+							</div>
+						</div>
+						<!--.disabled为禁用样式-->
+						<a id="contact-btn" class="btn-send"
+							onclick="contactNewConversation(this)">发起会话</a>
+					</div>
+				</div>
+			</div>
+
+			<!--搜索 start-->
+			<div class="search-list">
+				<div class="right-list hideList">
+					<div class="search-members">
+						<div class="search-header">
+							<span style="font-size: 14px;color: #999;">联系人</span>
+							<span class="fr search-members-expand hideList">查看全部<span class="search-members-total"></span></span>
+							<span class="fr hideList search-members-collapse">收起</span>
+						</div>
+						<ul  class="clearfix name-list search-show search-members-show">
+
+						</ul>
+					</div>
+					<div class="search-channels">
+						<div class="search-header">
+							<span style="font-size: 14px;color: #999;">频道</span>
+							<span class="fr search-channels-expand hideList">查看全部<span class="search-channels-total"></span></span>
+							<span class="fr hideList search-channels-collapse">收起</span>
+						</div>
+						<ul  class="clearfix name-list search-show search-channels-show">
+
+						</ul>
+					</div>
+					<div class="search-groups">
+						<div class="search-header">
+							<span style="font-size: 14px;color: #999;">群聊</span>
+							<span class="fr search-groups-expand hideList">查看全部<span class="search-groups-total"></span></span>
+							<span class="fr hideList search-groups-collapse">收起</span>
+						</div>
+						<ul  class="clearfix name-list search-show search-groups-show">
+
+						</ul>
+					</div>
+				</div>
+				<div class="right-con hideList">
+					<span class="contacts-title"></span>
+					<div id="contacts-detail2" class="my-detal" style="background-color: #fff;">
+						<div class="detail-title">
+							<div class="im-name"></div>
+							<p id="contacts-detail-name2"></p>
+							<span id="contacts-detail-status2" class="un-active hideList">未激活</span>
+						</div>
+						<div class="detail-tab" style="height: 20px;"></div>
+						<!--个人信息-->
+						<div id="contacts-detail-infos2" class="detail-message"
+							 style="height: 298px; overflow-y: auto;">
+							<div class="gray">个人信息</div>
+							<p id="contacts-detail-phone2">
+								<em class="iconn-20"></em>
+							</p>
+							<p id="contacts-detail-mail2">
+								<em class="iconn-42"></em>
+							</p>
+							<p id="contacts-detail-dept2">
+								<em class="iconn-4"></em>
+							</p>
+							<p id="contacts-detail-duty2">
+								<em class="iconn-43"></em>
+							</p>
+							<div id="partTime2" class="hideList">
+								<div class="gray">兼任信息</div>
+							</div>
+						</div>
+						<!--.disabled为禁用样式-->
+						<a id="contact-btn2" class="btn-send"
+						   onclick="contactNewConversation(this)">发起会话</a>
+					</div>
+				</div>
+			</div>
+			<!--搜索 end-->
+			<!--文件列表 start -->
+			<div class="file-list" id="file-list">
+                <div  class="no-record prompt-record">
+                    <img src="../images/public/file-no-record.jpg" width="120" height="90">
+                </div>
+				<div class="prompt">暂无聊天文件</div>
+				<div class="title">聊天文件</div>
+				<div class="file-list-wrapper">
+					<div class="fresh hideList">刷新失败，请<span>重试</span></div>
+					<ul class="file-list-ul" id="file-list-ul">
+
+					</ul>
+					<div class="load-wrong hideList">加载失败，请<span>重试</span></div>
+				</div>
+			</div>
+			<!--文件列表 end -->
+		</div>
+        <div class="global-win-control">
+            <a id="winMin" herf="javascript:;" class="iconn-3"></a><a
+            id="winMax" herf="javascript:;" class="iconn-45 iconn-38"></a><a
+            id="winClose" herf="javascript:;" class="iconn-11"></a>
+        </div>
+		<div id="global-context-menu" class="mouse-new hideList kright">
+			<div class="copy-file-context-menu hideList" onclick="copyFileToAnotherPath()">另存为...</div>
+			<div class="set-top-context-menu hideList" onclick="setSessionTop()">置顶</div>
+			<div class="cancel-top-context-menu hideList" onclick="cancelSessionTop()">取消置顶</div>
+            <div class="set-session-mute hideList" onclick="setSessionMute()">消息免打扰</div>
+            <div class="cancel-session-mute hideList" onclick="cancelSessionMute()">取消免打扰</div>
+			<div class="delete-session-context-menu hideList" onclick="contextMenuDeleteSession()">删除聊天</div>
+			<div class="exit-group-context-menu hideList" onclick="openExitGroupModal()">退出群聊</div>
+			<div class="refresh-dept-context-menu hideList" onclick="refreshDept()">刷新</div>
+			<div class="refreshing-dept-context-menu hideList"  >正在刷新...</div>
+            <!--头像右键-->
+            <div class="sendmsg-chat-context-menu hideList"   onclick="rightmenuOpensession()">发起会话</div>
+            <div class="aite-chat-context-menu hideList"  onclick="rightmenuAite()" >@TA</div>
+            <!--搜索框右键-->
+            <div class="copy-chat-context-menu hideList"  onmousedown="searchCopy()">复制</div>
+            <div class="cut-chat-context-menu hideList"  onmousedown="searchCut()">剪切</div>
+            <div class="paste-chat-context-menu hideList"  onmousedown="searchPaste()">粘贴</div>
+            <div class="select-all-chat-context-menu hideList"  onclick="searchSelectAll()">全选</div>
+		</div>
+
+		<!--回发弹窗 -->
+		<div class="fileSendReturn  animatehide">
+			<p class="title">确认向全球回发此文件？</p>
+			<div class="body">
+				<img class="pic" src="../images/file/EXCEL40@2x.png">
+				<div class="content">
+					<p class="filename">产品具体希望文档修改规划。doc</p>
+					<p class="localtion">位置：e:\aba\234\dd\a.txt</p>
+					<p class="time">修改时间：2017.0.10</p>
+				</div>
+			</div>
+			<div class="btn">
+				<span class="cancle">取消</span>
+				<span class="confirm">确认</span>
+			</div>
+		</div>
+		<!--aite @人员列表 -->
+		<div class="aiteMemberList hideList kright"></div>
+		<!--消息右键输入框菜单列表 -->
+		<div class="inputrightmenu hideList kright">
+			<ul>
+				<li>复制</li>
+				<li>复制</li>
+				<li>复制</li>
+			</ul>
+		</div>
+		<!--消息右键菜单列表 -->
+		<div class="krightmenu hideList kright"></div>
+		<div class="exit-group-modal hide">
+			<div class="exit-group-body">退出群聊后，将不再接收此群聊消息，确定退出？</div>
+			<div class="exit-group-btn-group">
+				<button class="exit-group-cancel">取消</button>
+				<button class="exit-group-confirm">确定</button>
+			</div>
+		</div>
+
+		<!--发起群聊-->
+		<div id="group-chat-member"  class="hideList">
+			<div class="group-chat-title">
+				添加群聊成员
+			</div>
+			<div class="group-chat-search">
+				<em class="icon-searchPerson"></em>
+				<input type="text">
+			</div>
+			<div class="group-chat-totalList">
+				<div class="group-chat-addressList">
+					<ul class="group-addressList">
+						<li><a id="myContacts2" href="javascript:;"><!--<em
+								class="iconn-24"></em>-->
+							<div></div>
+							<p>常用联系人</p> <!--<span class="num"></span>--></a>
+							<ul id="myContacts-content2" class="group-my hideList">
+							</ul>
+						</li>
+						<!-- 部门树 -->
+						<div id="deptTree2"></div>
+					</ul>
+				</div>
+				<div class="group-chat-personList">
+					<div id="searchNoData" class="searchNoData allNoData hideList">暂无搜索数据</div>
+					<div id="contactNoData" class="contactNoData allNoData hideList">暂无联系人数据</div>
+					<div id="treeNoData" class="treeNoData allNoData hideList">暂无部门数据</div>
+					<div id="all-personList" class="all-personList personLists hideList">
+						<span>全部</span>
+						<div class="pitch-active-div"></div>
+						<em></em>
+					</div>
+					<ul id="groupTree-personList" class="groupTree-personList personLists hideList">
+						<!--<li>
+							<span>李逍遥</span>
+							<p>视觉设计师</p>
+							<input type="checkbox">
+							<em></em>
+						</li>-->
+					</ul>
+					<ul id="contact-personList" class="contact-personList personLists hideList">
+						<!--<li>
+							<span>李逍遥</span>
+							<p>视觉设计师</p>
+							<input type="checkbox" disabled="disabled">
+							<em></em>
+						</li>-->
+					</ul>
+					<ul id="search-personList" class="search-personList personLists hideList">
+						<!--<li>
+							<span>李逍遥</span>
+							<p>视觉设计师</p>
+							<input type="checkbox" disabled="disabled">
+							<em></em>
+						</li>-->
+					</ul>
+				</div>
+				<div class="group-chat-selectList">
+					<div class="selectList-count">
+						<span>已选</span>
+						<p><strong class="selectedNumber">0</strong><strong>/</strong><strong class="selectTotalNumber">99</strong></p>
+						<div class="rubbish-btn">
+							<div class="rubbish"><img src="../images/icon/选择-删除不可用@2x.png" alt=""></div>
+							<i>清除</i>
+						</div>
+					</div>
+					<div class="selectList-delMsg">请从左侧选择成员，单击可删除</div>
+					<ul id="selectList-name" class="selectList-name">
+						<!--<li>李逍遥</li>
+						<li>赵灵儿</li>
+						<li>林月如</li>
+						<li>姜云凡</li>
+						<li>唐雨柔</li>
+						<li>慕容紫英</li>-->
+					</ul>
+				</div>
+			</div>
+			<div class="group-chat-button">
+				<a class="btn-cancel" >取消</a>
+				<a class="btn-confirm">确定</a>
+			</div>
+		</div>
+	</div>
+
+<script>
+    /*var obj = document.getElementById('first');
+    obj.onclick = function () {
+        this.className = 'list-text file-wrapper padding-0 doc-bac-color on';
+    }*/
+
+
+
+    var begin = true;
+    $('.voice').on('click', function () {
+        if (begin) {
+            $(this).find('.icon-voice').addClass('hide').siblings('.voice-box').removeClass('hide');
+            begin = false;
+        } else {
+            $(this).find('.icon-voice').removeClass('hide').siblings('.voice-box').addClass('hide');
+            begin = true;
+        }
+
+    })
+
+</script>
+<script src="../js/kInputRightMenu.js"></script>
+<script src="../js/kRightMenu.js"></script>
+<script src="../dist/static/js/app.js"></script>
+</body>
+</html>

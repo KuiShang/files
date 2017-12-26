@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设置快捷键</title>
+    <style>
+        body {
+            text-align: center;
+            -webkit-user-select: none;
+            font-family: 'PingFang SC','Microsoft YaHei',sans-serif;
+        }
+        p {
+            margin-top: 30px;
+            color: #999;
+            font-size: 12px;
+            line-height: 16px;
+        }
+        .hot-key {
+            margin: 33px auto 0;
+            font-size: 24px;
+            color: #323232;
+            line-height: 28px;
+            height: 28px;
+            word-wrap: break-word;
+        }
+        .btn-group {
+            margin-top: 41px;
+        }
+        .cancel, .confirm {
+            display: inline-block;
+            width: 64px;
+            height: 30px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 12px;
+            vertical-align: top;
+            cursor: pointer;
+        }
+        .cancel {
+            border: 1px solid #ccc;
+            color: #999;
+            line-height: 28px;
+            margin-right: 20px;
+        }
+        .confirm {
+            background-color: #4A4C5B;
+            color: #fff;
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false">
+<p>请直接在键盘上输入新的快捷键</p>
+<div class="hot-key"></div>
+<div class="btn-group">
+    <span class="cancel">取消</span><span class="confirm">确定</span>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/qwebchannel.js"></script>
+<script>
+    $(function() {
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+            window.qHotKeySetObject  = channel.objects.qHotKeySetObject;
+
+            var hotkey = '';
+
+            qHotKeySetObject.signalKeySequence.connect(function(data) {
+                console.log(data);
+                hotkey = data;
+                if (hotkey === 'no') {
+                    hotkey = '无';
+                }
+                if (hotkey.length === 30) {
+                    $('.hot-key').width(240);
+                } else {
+                    $('.hot-key').width(328);
+                }
+                $('.hot-key').html(hotkey);
+            });
+            $('.cancel').on('click', function() {
+                qHotKeySetObject.CloseWnd();
+            });
+            $('.confirm').on('click', function() {
+                if (hotkey === '无') {
+                    hotkey = 'no';
+                }
+                qHotKeySetObject.setKeySequence(hotkey);
+            });
+
+            qHotKeySetObject.OnHtmlReady();
+        });
+    });
+</script>
+</body>
+</html>

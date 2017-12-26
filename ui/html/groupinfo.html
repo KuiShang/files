@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>群组详情</title>
+<meta name="author" content="美信网络技术有限公司">
+<meta name="description" content="国美">
+<meta name="keywords" content="国美Plus">
+<link type="text/css" rel="stylesheet" href="../css/public/public.css">
+<link type="text/css" rel="stylesheet" href="../css/module/smartMenu.css">
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/qwebchannel.js"></script>
+<script src="../js/utils.js"></script>
+  <script src="../js/jquery-smartMenu.js"></script>
+<script src="../js/groupInfo.js"></script>
+<script src="../js/main-objects.js"></script>
+
+
+
+</head>
+<!-- oncontextmenu="return false" -->
+<body class="opg" oncontextmenu="return false" style="-webkit-user-select: none;">
+<!-- 这个div用来反转义字符串 -->
+	<div id="decode" style="display: none;"></div>
+	<!--群详情弹窗-->
+	<div class="windows-pop" style="width: 100%">
+      <div class="pop-title">
+        <div class="fl">
+          <p><span id="group-name" style="font-size: 18px;color: #fff;"></span></p>
+        </div>
+        <div class="fr">
+          <div class="im-name" id="group-avatar"><em class="iconn-46"></em></div><span id="group-count"></span>
+        </div>
+      </div>
+      <div class="pop-con">
+        <div class="personal-detail">
+          <div class="my-detal">
+            <div class="detail-tab">
+              <div class="fl"><a id="group-detail-info-btn" href="javascript:;" class="active">资料</a></div>
+              <div class="fr"><a id="group-detail-members-btn" href="javascript:;">成员</a></div>
+            </div>
+            <div id="group-detail-info" class="detail-name">
+              <div class="gray">群名称</div>
+              <p id="group-name-small">周昊,王伟伟,张鑫,孟非,董丽,王娜娜</p>
+              <input class="group-name-input hide" maxlength="20"/>
+              <span class="edit hide"><img src="../images/public/编辑@2x.png"></span>
+              <div class="gray">群公告</div>
+              <p id="group-bulletin">1</p>
+            </div>
+            <div id="group-detail-members" class="detail-members detail-membersWindow" style="display:none;">
+              <ul class="clearfix">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

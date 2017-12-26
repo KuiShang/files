@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>查看大图</title>
+    <meta name="author" content="美信网络技术有限公司">
+    <meta name="description" content="国美">
+    <meta name="keywords" content="国美Plus">
+    <link type="text/css" rel="stylesheet" href="../css/public/public.css">
+    <link type="text/css" rel="stylesheet" href="../css/module/viewImage.css">
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/compatible.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/qwebchannel.js"></script>
+    <script src="../js/mouseWheel.js"></script>
+    <script src="../js/viewImage.js"></script>
+</head>
+<body class="opg" oncontextmenu="return false" style="-webkit-user-select: none;">
+<div class="loading-img hideList sk-three-bounce">
+    <div class="sk-child sk-bounce1"></div>
+    <div class="sk-child sk-bounce2"></div>
+    <div class="sk-child sk-bounce3"></div>
+</div>
+<!--查看图片-->
+<div id="win" class="windows-img">
+    <img id="img" class="imgDe" src="">
+    <div id="view-img-top-bar" class="hide">
+        <div class="top-control">
+            <!-- <em id="close" class=""></em> -->
+            <em id="min" class=""></em><em id="max" class=""></em><em id="close" class=""></em>
+        </div>
+    </div>
+    <div class="edit-area hide">
+        <em id="pre-small" class="iconn-pre"></em>
+        <em id="next-small" class="iconn-next"></em>
+        <i class="iconn-separator"></i>
+        <em id="zoom-out" class="iconn-zoom-out"></em>
+        <span class="percent">90%</span>
+        <em id="zoom-in" class="iconn-zoom-in"></em>
+        <em id="save" class="iconn-save"></em>
+        <em id="rorate" class="iconn-rotate" onclick="rotateImg()"></em>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="de4expires" content="0">
+<title>设置</title>
+<meta name="author" content="美信网络技术有限公司">
+<meta name="description" content="国美">
+<meta name="keywords" content="国美Plus">
+<link type="text/css" rel="stylesheet" href="../css/public/public.css">
+	<link type="text/css" rel="stylesheet" href="../css/module/smartMenu.css">
+<link type="text/css" rel="stylesheet" href="../css/module/set.css">
+
+
+<script src="../js/compatible.js"></script>
+<script src="../js/jquery.min.js"></script>
+	<script src="../js/jquery-smartMenu.js"></script>
+<script src="../js/qwebchannel.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/config.js"></script>
+	<style>
+		html{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+
+</head>
+<body class="opg">
+	<!-- oncontextmenu="return false" -->
+	<div id="window" class="windows-set" oncontextmenu="return false" style="-webkit-user-select: none;">
+		<span class="for-copy-path"></span>
+		<div class="alreadynew animatehide">
+			<p>
+				<span>当前已是最新版本</span>
+				<span class="iknow">知道了</span>
+			</p>
+		</div>
+		<div id="set-left" class="set-left">
+			<h2>设置</h2>
+			<ul class="clearfix set-menu">
+				<li id="account-set" onclick="switchSet(this)"><a class="active"><em class="iconn-19"></em><span>账号设置</span></a></li>
+				<li id="common-set" onclick="switchSet(this)"><a><em class="iconn-17"></em><span>通用设置</span></a></li>
+                <li id="hotkey-set" onclick="switchSet(this)"><a><em class="icon-hotkey"></em><span>快捷按键</span></a></li>
+				<li id="modify-password" onclick="switchSet(this)"><a><em class="iconn-18"></em><span>修改密码</span></a></li>
+				<li id="about-us" onclick="switchSet(this)"><a><em class="iconn-16"></em><span>关于我们</span></a><i class="hideList"></i></li>
+			</ul>
+		</div>
+		<div class="set-right">
+			<div id="right-top" class="right-top">
+				<div class="right-top-wrapper">
+					<a id="winMin" href="javascript:;" class="iconn-3"></a>
+					<a id="winClose" href="javascript:;" class="iconn-11"></a>
+				</div>
+			</div>
+			<div id="right-con" class="right-con">
+				<!--账号设置,关于我们-->
+				<div id="account-set-content" class="set-name">
+					<div id="myNickName" class="im-name"></div>
+					<p id="myName"></p>
+					<!--.disabled为禁用样式-->
+					<a id="logout_btn" class="btn-out">退出登录</a>
+				</div>
+				<!--修改密码-->
+				<div id="modify-password-content" class="set-password" style="display:none;">
+					<div id="error-tip" class="error-text" style="display:none;"></div>
+					<p id="modify-tip"></p>
+					<div class="pr">
+						<input id="old-pwd" type="password" placeholder="输入原密码"><a
+							id="clearOldPwd" class="iconn-11" style="display:none;"></a>
+					</div>
+					<div class="pr">
+						<input id="new-pwd" type="password" placeholder="输入新密码(6-20位含字母、数字)"><a
+							id="clearNewPwd" class="iconn-11" style="display:none;"></a>
+					</div>
+					<div class="pr">
+						<input id="confirm-pwd" type="password" placeholder="再次输入新密码"><a
+							id="clearConfirmPwd" class="iconn-11" style="display:none;"></a>
+					</div>
+					<a id="confirmModify" class="btn-send">确定</a>
+				</div>
+				<!--通用设置-->
+				<div id="common-set-content" class="set-all" style="display: none;">
+					<div class="usually">
+						<div class="all-title">常用</div>
+						<div class="set-key">
+							<label id="autoLogin_">
+								<em id="autoLogin" class="icon9"></em><span>自动登录</span>
+							</label>
+							<label id="autoRunning_">
+								<em id="autoRunning" class="icon9"></em><span>开机时自动启动</span>
+							</label>
+							<label id="soundTip_">
+								<em id="soundTip" class="icon9"></em><span>开启新消息提示音</span>
+							</label>
+						</div>
+					</div>
+					<div class="msg-manage">
+						<div class="all-title">文件管理</div>
+						<!--mac-->
+						<div class="file-msg clearfix msg-m hide">
+							<!--.open为展开选项-->
+							<div id="mag-select" class="key-select close">
+								<!--.active为选中选项-->
+								<a id="actives-select">
+									<em class="iconn-29" style="height:24px;" ></em>
+									<span>Aeromind</span>
+									<em class="down"></em>
+								</a>
+								<a id="select-other" style="top:2px"><em class="iconn-29"></em><span style="margin-left:4px">其他</span></a>
+							</div>
+                            <div class="mag-select-remind">Aeromind文件的默认保存位置</div>
+						</div>
+						<!--win-->
+						<div class="file-msg clearfix msg-w hide">
+							<!--.open为展开选项-->
+							<div id="mag-select-w" class="key-select close">
+								<a><input id="actives-select-w" readonly></a>
+								<span id="mag-w-but" style="margin-left:12px">更改</span>
+							</div>
+                            <div class="mag-select-remind">Aeromind文件的默认保存位置</div>
+						</div>
+					</div>
+
+				</div>
+                <div id="hotkey-set-content" class="hotkey-set-content" style="display: none;">
+                    <div class="hotkey-wrapper clearfix">
+                        <div class="all-title">发送消息</div>
+                        <div class="hotkey-box">
+                            <label class="enter-send"><em class="icon9"></em><span>Enter发送,Ctrl+Enter换行</span></label>
+                            <label class="enter-crlf"><em class="icon10"></em><span>Enter换行,Ctrl+Enter发送</span></label>
+                        </div>
+                    </div>
+                    <div class="hotkey-wrapper hotkey-print-screen clearfix">
+                        <div class="all-title">屏幕截图</div>
+                        <div class="hotkey-box">
+                            <label></label>
+                            <span class="iconn-11"></span>
+                            <span class="conflict hide">冲突</span>
+                        </div>
+                    </div>
+                    <div class="hotkey-wrapper hotkey-open-window clearfix">
+                        <div class="all-title">打开窗口</div>
+                        <div class="hotkey-box">
+                            <label></label>
+                            <span class="iconn-11"></span>
+                            <span class="conflict hide">冲突</span>
+                        </div>
+                    </div>
+                    <div class="hotkey-wrapper hotkey-check clearfix">
+                        <div class="all-title">检测热键</div>
+                        <div class="hotkey-box">
+                            <label class="check-hotkey"><em class="icon9"></em>热键与其他软件冲突时提醒</label>
+                        </div>
+                    </div>
+                    <div class="hotkey-wrapper set-default-hotkey">
+                        <span class="default-hotkey">恢复默认设置</span>
+                    </div>
+                </div>
+				<div id="about-us-content" style="display:none;">
+					<div class="im-name im-images-logo">
+						<img src="../images/public/桌面端登录.png">
+					</div>
+					<p id="appName">123Aeromind 1.1.1</p>
+					<div class="update">
+						<span>检查更新</span>
+						<i class="hideList"></i>
+					</div>
+					<div class="user-agreement-box">
+							<a class="user-agreement user-agree-text" href="javascript:;" >《Aeromind用户服务协议》</a>
+							<a class="user-agreement user-secret-text" href="javascript:;" >《隐私政策》</a>
+						
+					</div>
+					<!-- <div class="set-copyright">国美互联网企业云版权所有</div> -->
+				</div>
+			</div>
+
+			<!--关于我们页面底部文字-->
+			<!--  -->
+		</div>
+		<script>
+           /* if (/macintosh|mac os x/i.test(navigator.userAgent)) {
+                $('#appName').html('Aeromind
+
+                 1.0.1');
+            }*/
+		</script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+<title>个人详情</title>
+<meta name="author" content="美信网络技术有限公司">
+<meta name="description" content="国美">
+<meta name="keywords" content="国美Plus">
+<link type="text/css" rel="stylesheet" href="../css/public/public.css">
+<link type="text/css" rel="stylesheet" href="../css/module/smartMenu.css">
+<link type="text/css" rel="stylesheet" href="../css/module/userinfo.css">
+<script src="../js/jquery.min.js"></script>
+
+<script src="../js/qwebchannel.js"></script>
+
+<script src="../js/utils.js"></script>
+	<script src="../js/jquery-smartMenu.js"></script>
+<script src="../js/userInfo.js"></script>
+	<!--<style>
+		html{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>-->
+</head>
+<!-- oncontextmenu="return false" -->
+<body class="opg" oncontextmenu="return false" style="-webkit-user-select: none;">
+	<!--个人详情弹窗-->
+	<div class="windows-pop">
+		<div class="pop-title">
+			<div class="fl">
+				<p id="staffName"></p>
+                <img src="../images/icon/icon常用联系人@2x.png" class="star-contact-inactive">
+				<em id="active-status" class="iconn-5" style="display:none;"></em>
+			</div>
+			<div class="fr">
+				<div id="nickName" class="im-name"></div>
+				<span id="status">未激活</span>
+			</div>
+		</div>
+		<div class="pop-con">
+			<div class="personal-detail">
+				<div id="detail-message" class="detail-message">
+					<div class="gray">个人信息</div>
+					<p id="phone"></p>
+					<p id="mail"></p>
+					<p id="dept"></p>
+					<p id="duty"></p>
+					<div id="partTime" style="display:none;margin-top: 10px;">
+						<div class="gray">兼任信息</div>
+					</div>
+				</div>
+			</div>
+            <div class="other-compony hideList">暂无企业信息</div>
+		</div>
+		<div id="footer" class="pop-footer">
+			<!--.disabled为禁用样式-->
+			<button id="btn" class="btn-send disabled">发起会话</button>
+		</div>
+	</div>
+</body>
+</html>
