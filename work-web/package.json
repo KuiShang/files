@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "0.16.2",
+    "axios": "0.21.1",
     "china-dist-data": "^1.0.0",
     "element-ui": "1.3.4",
     "underscore": "^1.8.3",
